@@ -7,6 +7,7 @@ import random
 
 RPLAYER_ID_LST = []
 COMPETITION_MODE = ""
+SORT_PLAYERS = "points-desc"
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + \
@@ -117,9 +118,18 @@ class Tournament2vs2(db.Model):
 
 @app.route('/')
 def index():
+    global SORT_PLAYERS
+
     tasks = Task.query.order_by(Task.id.asc()).all()
     complete_tasks = Task.query.filter_by(complete=True).count()
-    players = Player.query.order_by(Player.points.asc()).all()
+
+    if SORT_PLAYERS == "points-desc":
+        players = Player.query.order_by(Player.points.desc()).all()
+    elif SORT_PLAYERS == "names-asc":
+        players = Player.query.order_by(Player.name.asc()).all()
+    else:
+        players = Player.query.order_by(Player.id.asc()).all()
+
     players_count = Player.query.filter_by(name=True).count()
     return render_template('index.html',
         tasks=tasks,
@@ -250,6 +260,15 @@ def random_draw2vs2(players):
         print("Not enough Player")
     #print(RPLAYER_ID_LST)
     return RPLAYER_ID_LST
+
+@app.route("/sort_players" , methods=['GET', 'POST'])
+def sort_players():
+    global SORT_PLAYERS
+
+    selected = request.form.get('select_sort_players')
+    SORT_PLAYERS = str(selected)
+    print(SORT_PLAYERS)
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)

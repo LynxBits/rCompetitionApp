@@ -26,12 +26,25 @@
         <!-- #################################################### -->
         <div class="row">
             <div class="col player-box rounded p-2">
-                <h3>Players ({{ players | count }})</h3>
-                <div class="form ">
-                    <form action="/add_player" method="post">
-                        <input type="text" placeholder="Enter Player Name" class="form-control" name="player" required />
-                        <input type="submit" value="Add +" class="btn btn-primary add-player-btn">
-                    </form>
+                <div class="">
+                    <h3>Players ({{ players | count }})</h3>
+                </div>
+                <div class="row">
+                    <div class="col form">
+                        <form action="/add_player" method="post">
+                            <input type="text" placeholder="Enter Player Name" class="form-control" name="player" required />
+                            <input type="submit" value="Add +" class="btn btn-primary add-player-btn">
+                        </form>
+                    </div>
+                    <div class="col form select-sort-box">
+                        <form action="/add_player" method="post">
+                            <select class="form-select" aria-label="Default select example" name="select_sort_players" method="post">
+                                <option value="points-desc" selected>points-desc</option>
+                                <option value="names-asc">name-asc</option>
+                            </select>
+                            <input type="submit" value="Sort" class="btn btn-primary">
+                        </form>
+                    </div>
                 </div>
 
                 <div class="list-group">
@@ -40,7 +53,7 @@
                     <div class="list-group-item">
                         <div class="row">
                             <div class="col">
-                                <h4>{{player.name}}</h4>
+                                <h4 title="id={{ player.id }} name={{ player.name }}">{{player.name}}</h4>
                             </div>
                             <div class="col del-player-btn">
                                 <a href="/delete_player/{{ player.id }}/" class="btn btn-danger"><i class="fa fa-ban fa-1x" aria-hidden="true"></i></a>
@@ -53,7 +66,7 @@
                                         <input type="number" placeholder="{{ player.wins }} wins" class="form-control wp-input-box" name="wins" default="0" />
                                     </div>
                                     <div class="col wp-form-box wp-form-points-show">
-                                        <input type="number" placeholder="{{ player.points }} pints" class="form-control wp-input-box" name="points" required />
+                                        <input type="number" placeholder="{{ player.points }} points" class="form-control wp-input-box" name="points" required />
                                     </div>
                                     <div class="col wp-form-box">
                                         <input type="submit" value="Save" class="btn btn-primary save-tournament-btn">
@@ -88,9 +101,9 @@
                 </div>
                 <div class="draw-box">
                     {% if competition_mode == "" %}
-                        <p>Select a Mode {{ competition_mode }}</p>
-                        {{ rplayer_id_lst }}
-                        {{ competition_mode }}
+                        <div class="unselected-rdraw-box">
+                            <h5>Select a Mode ... </h5>
+                        </div>
 
 
                     {% elif competition_mode == "1vs1" %}

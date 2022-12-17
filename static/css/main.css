@@ -1,9 +1,15 @@
+.unselected-rdraw-box {
+    margin: 3rem;
+    text-align: center;
+}
+
 .player-box {
     background-color: rgb(182, 212, 208);
 }
 
 .del-player-btn {
-
+    text-align: right;
+    padding-bottom: 0.1rem;
 }
 
 .lap-box {
@@ -44,8 +50,8 @@
 }
 
 .wp-form-box {
+    text-align: right;
 }
 
 .wp-input-box {
-    
 }
