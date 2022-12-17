@@ -1,12 +1,14 @@
-# Flask rCompetition App
-This is a simple application built with Flask for easy Competition (Tournement) organisation. The easy Script tournementDrawCli.py is a easy to use standalone cli tool to draw a round randomly.
+# rCompetition App
+This is a simple application built with Flask for easy Competition (Tournement) organisation.
 
-# Python rCompetition App Flask
-Install requirements:
+The script tournementDrawCli.py is a easy to use standalone cli-tool to draw a round randomly by handwritten list.
+
+The Flask application is a web tool with the same functionality of the cli-tool.
+# Flask App - Python - rCompetition
+Install requirements for Python==3.9.13:
 
 ```
 pip install -r requirements.txt
-
 ```
 
 Run the file to create the database
@@ -15,7 +17,7 @@ Run the file to create the database
 python create_all_db.py
 ```
 
-Run with
+Run app with
 
 ```
 app.py
