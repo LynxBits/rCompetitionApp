@@ -2,6 +2,10 @@
     background-color: rgb(182, 212, 208);
 }
 
+.del-player-btn {
+
+}
+
 .lap-box {
     background-color: rgb(141, 197, 190);
 }
@@ -37,4 +41,11 @@
 .add-player-btn {
     margin-bottom: 0.5rem;
     margin-top: 0.1rem;
+}
+
+.wp-form-box {
+}
+
+.wp-input-box {
+    
 }

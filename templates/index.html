@@ -25,7 +25,7 @@
 
         <!-- #################################################### -->
         <div class="row">
-            <div class="col-md-auto player-box rounded p-2">
+            <div class="col player-box rounded p-2">
                 <h3>Players ({{ players | count }})</h3>
                 <div class="form ">
                     <form action="/add_player" method="post">
@@ -41,21 +41,25 @@
                         <div class="row">
                             <div class="col">
                                 <h4>{{player.name}}</h4>
-                                <div class="">
-
-                                    {% if player.points %}
-                                        Points: {{ player.points }}
-                                        Wins: {{ player.wins }}
-                                    {% else %}
-                                        Points: {{ player.points }}
-                                        Wins: {{ player.wins }}
-                                    {% endif %}
-
+                            </div>
+                            <div class="col del-player-btn">
+                                <a href="/delete_player/{{ player.id }}/" class="btn btn-danger"><i class="fa fa-ban fa-1x" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <form action="/save_points/{{ player.id }}/{{ player.points }}" method="post">
+                                <div class="row">
+                                    <div class="col wp-form-box wp-form-wins-show">
+                                        <input type="number" placeholder="{{ player.wins }} wins" class="form-control wp-input-box" name="wins" default="0" />
+                                    </div>
+                                    <div class="col wp-form-box wp-form-points-show">
+                                        <input type="number" placeholder="{{ player.points }} pints" class="form-control wp-input-box" name="points" required />
+                                    </div>
+                                    <div class="col wp-form-box">
+                                        <input type="submit" value="Save" class="btn btn-primary save-tournament-btn">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-auto">
-                                <a href="/delete_player/{{player.id}}/" class="btn btn-danger"><i class="fa fa-ban fa-1x" aria-hidden="true"></i></a>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     {% endfor %}
@@ -84,13 +88,30 @@
                 </div>
                 <div class="draw-box">
                     {% if competition_mode == "" %}
-                        <p>competition_mode == "" -> {{ competition_mode }}</p>
+                        <p>Select a Mode {{ competition_mode }}</p>
                         {{ rplayer_id_lst }}
                         {{ competition_mode }}
 
 
                     {% elif competition_mode == "1vs1" %}
-                        <h3>Mode(1vs1)</h3>
+                        <div class="form ">
+                            <form action="/save_{{ competition_mode }}" method="post">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <h3>Mode({{ competition_mode }})</h3>
+                                    </div>
+                                    <div class="col-sm tour-form-box">
+                                        <input type="text" placeholder="Enter Tournament Name" class="form-control" name="tname" required />
+                                    </div>
+                                    <div class="col-sm-1 tour-form-box">
+                                        <input type="text" placeholder="Enter lap" class="form-control" name="lap" required />
+                                    </div>
+                                    <div class="col-sm tour-form-box">
+                                        <input type="submit" value="Save Draw" class="btn btn-primary save-tournament-btn">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         {% for rplayer_id in rplayer_id_lst %}
                             <!--
                                 <p>{{loop.index0}} {{ rplayer_id_lst[loop.index0] }}</p>
@@ -126,7 +147,24 @@
 
 
                     {% elif competition_mode == "2vs2" %}
-                        <h3>Mode(2vs2)</h3>
+                    <div class="form ">
+                        <form action="/save_{{ competition_mode }}" method="post">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h3>Mode({{ competition_mode }})</h3>
+                                </div>
+                                <div class="col-sm tour-form-box">
+                                    <input type="text" placeholder="Enter Tournament Name" class="form-control" name="tname" required />
+                                </div>
+                                <div class="col-sm tour-form-box">
+                                    <input type="text" placeholder="Enter lap" class="form-control" name="lap" required />
+                                </div>
+                                <div class="col-sm-2 tour-form-box">
+                                    <input type="submit" value="Save Draw" class="btn btn-primary save-tournament-btn">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                         {% for rplayer_id in rplayer_id_lst %}
                             {% set l = loop.index %}
 

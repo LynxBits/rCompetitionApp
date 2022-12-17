@@ -69,12 +69,12 @@ Tournament1on1
 - name : str
 - complete :bool
 """
-class Tournament1on1(db.Model):
+class Tournament1vs1(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     lap = db.Column(db.Integer)
-    player1ID = db.Column(db.Integer)
-    player2ID = db.Column(db.Integer)
+    playerAID = db.Column(db.Integer)
+    playerBID = db.Column(db.Integer)
 
     # def __init__(self, id, player1ID, player2ID):
     #     self.id = id
@@ -90,7 +90,7 @@ Tournament2on2
 - name : str
 - complete :bool
 """
-class Tournament2on2(db.Model):
+class Tournament2vs2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     lap = db.Column(db.Integer)
@@ -165,6 +165,7 @@ def delete_task(id):
 
     return redirect('/')
 
+
 @app.route('/add_player', methods=["POST"])
 def create_player():
     player = request.form.get('player')
@@ -185,6 +186,16 @@ def delete_player(id):
 
     db.session.commit()
 
+    return redirect('/')
+
+@app.route('/save_points/<int:id>/<int:points>/', methods=["POST"])
+def save_points(id, points):
+    player_to_update = Player.query.get(id)
+
+    player_to_update.wins = request.form.get('wins')
+    player_to_update.points = request.form.get('points')
+    db.session.add(player_to_update)
+    db.session.commit()
     return redirect('/')
 
 @app.route('/rcompetition_draw1vs1/')
