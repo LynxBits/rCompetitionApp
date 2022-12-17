@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     {{fontawesome_html()}}
     <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/show.css">
     <title>rCompetition</title>
 </head>
 
@@ -15,9 +16,197 @@
     <div class="container">
         <header>
             <center>
+
+                {% block header %}{% endblock %}
                 <h1>rCompetition Flask App</h1>
-                <p>complete tasks:{{complete_tasks}}</p>
+
             </center>
+        </header>
+
+        <!-- #################################################### -->
+        <div class="row">
+            <div class="col-md-auto player-box rounded p-2">
+                <h3>Players ({{ players | count }})</h3>
+                <div class="form ">
+                    <form action="/add_player" method="post">
+                        <input type="text" placeholder="Enter Player Name" class="form-control" name="player" required />
+                        <input type="submit" value="Add +" class="btn btn-primary add-player-btn">
+                    </form>
+                </div>
+
+                <div class="list-group">
+
+                    {% for player in players %}
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="col">
+                                <h4>{{player.name}}</h4>
+                                <div class="">
+
+                                    {% if player.points %}
+                                        Points: {{ player.points }}
+                                        Wins: {{ player.wins }}
+                                    {% else %}
+                                        Points: {{ player.points }}
+                                        Wins: {{ player.wins }}
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <div class="col-md-auto">
+                                <a href="/delete_player/{{player.id}}/" class="btn btn-danger"><i class="fa fa-ban fa-1x" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-auto rounded p-2">
+
+            </div>
+
+            <div class="col-sm-9 lap-box rounded p-2">
+                <div class="row">
+                    <div class="col-md-auto">
+                        <h3>rDraw</h3>
+                    </div>
+                    <div class="col-md-auto">
+                        <a href="/rcompetition_draw1vs1/" class="btn btn-primary">
+                            1vs1 <i class="fa fa-random fa-1x" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-auto">
+                        <a href="/rcompetition_draw2vs2/" class="btn btn-primary">
+                            2vs2 <i class="fa fa-random fa-1x" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="draw-box">
+                    {% if competition_mode == "" %}
+                        <p>competition_mode == "" -> {{ competition_mode }}</p>
+                        {{ rplayer_id_lst }}
+                        {{ competition_mode }}
+
+
+                    {% elif competition_mode == "1vs1" %}
+                        <h3>Mode(1vs1)</h3>
+                        {% for rplayer_id in rplayer_id_lst %}
+                            <!--
+                                <p>{{loop.index0}} {{ rplayer_id_lst[loop.index0] }}</p>
+                            -->
+                            {% set l = loop.index0 %}
+                            {% if l % 2 == 0 %}
+                                <div class="row border-rdraw-box">
+
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-md-auto vs-rdraw-box">vs.</div>
+                            {% else %}
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            {% if l % 2 == 0 and loop.last %}
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    {% elif competition_mode == "2vs2" %}
+                        <h3>Mode(2vs2)</h3>
+                        {% for rplayer_id in rplayer_id_lst %}
+                            {% set l = loop.index %}
+
+                            <!-- A -->
+                            {% if l % 4 == 1 %}
+                            <div class="row border-rdraw-box">
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-md-auto and-rdraw-box">&</div>
+
+                            <!-- B -->
+                            {% elif l % 4 == 2 %}
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-md-auto vs-rdraw-box">vs.</div>
+
+                            <!-- C -->
+                            {% elif l % 4 == 3 %}
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-md-auto and-rdraw-box">&</div>
+
+                            <!-- D -->
+                            {% elif l % 4 == 0 %}
+                                {% for player in players %}
+                                    {% if rplayer_id == player.id %}
+                                    <div class="col-md-auto player-rdraw-box" title="id={{ player.id }} name={{ player.name }}" >
+                                        {{ player.name }}({{ player.points }})
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
+
+                            {% endif %}
+
+                            {% if l % 4 == 3 and loop.last %}
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                            </div>
+
+                            {% elif l % 4 == 2 and loop.last %}
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                                <div class="col-md-auto and-rdraw-box">&</div>
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                            </div>
+
+                            {% elif l % 4 == 1 and loop.last %}
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                                <div class="col-md-auto vs-rdraw-box">vs.</div>
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                                <div class="col-md-auto and-rdraw-box">&</div>
+                                <div class="col-md-auto player-rdraw-box">free</div>
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- #################################################### -->
+        <div class="todo-box">
+            <h3>Tasks</h3>
+            <p>complete tasks:{{complete_tasks}}</p>
             <div class="form">
                 <form action="/add" method="post">
                     <input type="text" placeholder="Enter Todo Item" class="form-control" name="task" required />
@@ -25,32 +214,34 @@
                     <input type="submit" value="Add +" class="btn btn-primary">
                 </form>
             </div>
-        </header>
-        <div class="tasks list-group">
-            
-            {% for task in tasks %}
-            <div class="list-group-item">
-                <div class="section">
-                    <h4>{{task.name}}</h4>
+
+            <div class="tasks list-group">
+
+                {% for task in tasks %}
+                <div class="list-group-item">
+                    <div class="section">
+                        <h4>{{task.name}}</h4>
+                    </div>
+                    <div class="section">
+                        <a href="/delete/{{task.id}}/" class="btn btn-danger"><i class="fa fa-2x fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="section">
+
+                        {% if task.complete %}
+                            <a href="#" class="btn btn-success"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></a>
+                        {% else %}
+                        <a href="/complete/{{task.id}}/" class="btn btn-warning"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></a>
+                        {% endif %}
+
+                    </div>
                 </div>
-                <div class="section">
-                    <a href="/delete/{{task.id}}/" class="btn btn-danger"><i class="fa fa-2x fa-trash" aria-hidden="true"></i></a>
-                </div>
-                <div class="section">
-                    
-                    {% if task.complete %}
-                        <a href="#" class="btn btn-success"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></a>
-                    {% else %}
-                    <a href="/complete/{{task.id}}/" class="btn btn-warning"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></a>
-                    {% endif %}
-                        
-                </div>
+                {% endfor %}
+
             </div>
-            {% endfor %}
-                
         </div>
+
     </div>
-    <link rel="stylesheet" href="../static/index.js">
+    <link rel="stylesheet" href="../static/js/bootstrap.js">
 </body>
 
 </html>

@@ -1,8 +1,12 @@
 from flask import Flask, render_template, redirect, request
 from flask_fontawesome import FontAwesome
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, session
 import os
+import random
 
+
+RPLAYER_ID_LST = []
+COMPETITION_MODE = ""
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + \
@@ -14,7 +18,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 fa = FontAwesome(app)
-
 
 """
 Task
@@ -58,7 +61,7 @@ class Player(db.Model):
     #     self.ranks = ranks
 
     def __repr__(self):
-        return f'<Player {self.name}>'
+        return f'<Player [{self.id}, {self.name}, {self.wins}, {self.points}]>'
 
 """
 Tournament1on1
@@ -114,9 +117,18 @@ class Tournament2on2(db.Model):
 
 @app.route('/')
 def index():
-    tasks = Task.query.order_by(Task.id.desc()).all()
+    tasks = Task.query.order_by(Task.id.asc()).all()
     complete_tasks = Task.query.filter_by(complete=True).count()
-    return render_template('index.html', tasks=tasks, complete_tasks=complete_tasks)
+    players = Player.query.order_by(Player.points.asc()).all()
+    players_count = Player.query.filter_by(name=True).count()
+    return render_template('index.html',
+        tasks=tasks,
+        players=players,
+        players_count=players_count,
+        complete_tasks=complete_tasks,
+        rplayer_id_lst=RPLAYER_ID_LST,
+        competition_mode=COMPETITION_MODE
+    )
 
 
 @app.route('/add', methods=["POST"])
@@ -153,6 +165,80 @@ def delete_task(id):
 
     return redirect('/')
 
+@app.route('/add_player', methods=["POST"])
+def create_player():
+    player = request.form.get('player')
+
+    new_player = Player(name=player)
+
+    db.session.add(new_player)
+
+    db.session.commit()
+
+    return redirect('/')
+
+@app.route('/delete_player/<int:id>/')
+def delete_player(id):
+    player_to_delete = Player.query.get(id)
+
+    db.session.delete(player_to_delete)
+
+    db.session.commit()
+
+    return redirect('/')
+
+@app.route('/rcompetition_draw1vs1/')
+def rcompetition_draw1vs1():
+    global COMPETITION_MODE
+    global RPLAYER_ID_LST
+
+    print("Start rcompetition_draw1vs1")
+    players = Player.query.order_by(Player.name.asc()).all()
+    #print(len(players))
+    RPLAYER_ID_LST = random_draw1vs1(players)
+    for rplayer_id in RPLAYER_ID_LST:
+        print("id= ", str(rplayer_id), ", name=", str(Player.query.get(rplayer_id)))
+    print(RPLAYER_ID_LST)
+    COMPETITION_MODE = "1vs1"
+
+    return redirect('/')
+
+@app.route('/rcompetition_draw2vs2/')
+def rcompetition_draw2vs2():
+    global COMPETITION_MODE
+    global RPLAYER_ID_LST
+
+    print("Start rcompetition_draw2vs2")
+    players = Player.query.order_by(Player.name.asc()).all()
+    #print(len(players))
+    RPLAYER_ID_LST = random_draw1vs1(players)
+    for rplayer_id in RPLAYER_ID_LST:
+        print("id= ", str(rplayer_id), ", name=", str(Player.query.get(rplayer_id)))
+    print(RPLAYER_ID_LST)
+    COMPETITION_MODE = "2vs2"
+
+    return redirect('/')
+
+
+def random_draw1vs1(players):
+    RPLAYER_ID_LST = [p.id for p in players]
+    #print(rplayer_lst)
+    if len(RPLAYER_ID_LST) > 1:
+        random.shuffle(RPLAYER_ID_LST)
+    else:
+        print("Not enough Player")
+    print(RPLAYER_ID_LST)
+    return RPLAYER_ID_LST
+
+def random_draw2vs2(players):
+    RPLAYER_ID_LST = [p.id for p in players]
+    #print(RPLAYER_ID_LST)
+    if len(RPLAYER_ID_LST) > 3:
+        random.shuffle(RPLAYER_ID_LST)
+    else:
+        print("Not enough Player")
+    #print(RPLAYER_ID_LST)
+    return RPLAYER_ID_LST
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,40 @@
+.player-box {
+    background-color: rgb(182, 212, 208);
+}
+
+.lap-box {
+    background-color: rgb(141, 197, 190);
+}
+
+.player-rdraw-box {
+    background-color: rgb(194, 204, 203);
+    border-radius: 1rem;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.and-rdraw-box {
+    background-color: none;
+    padding-top: 0.9rem;
+}
+
+.vs-rdraw-box {
+    background-color: none;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.9rem;
+    justify-content: center;
+}
+
+.border-rdraw-box {
+    background-color: rgb(179, 209, 205);
+    border-radius: 1rem;
+    justify-content: center;
+    margin: 0.3rem;
+    padding: 0.3rem;
+}
+
+.add-player-btn {
+    margin-bottom: 0.5rem;
+    margin-top: 0.1rem;
+}
