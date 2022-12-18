@@ -22,3 +22,17 @@ Run app with
 ```
 app.py
 ```
+
+## Docker - Flask App
+
+Build:
+
+```
+docker image build -t flask_docker_rcompetition .
+```
+
+Run:
+
+```
+docker run -p 5000:5000 -d flask_docker_rcompetition
+```

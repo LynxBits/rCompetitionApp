@@ -1,0 +1,28 @@
+<h1>Tournament Simulator</h1>
+<p>Here are the current players and their points:</p>
+<table>
+  <tr>
+    <th>Player</th>
+    <th>Points</th>
+  </tr>
+  {% for player, info in players.items() %}
+  <tr>
+    <td>{{ player }}</td>
+    <td>{{ info['points'] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Start a Tournament</h2>
+<form method="post" action="/tournament">
+  <label for="num_players">Number of players per match:</label><br>
+  <input type="number" id="num_players" name="num_players"><br>
+  <input type="submit" value="Start Tournament">
+</form>
+
+{% for match in matches %}
+    <h2>Match</h2>
+    {% for player, points in match %}
+    <p>{{ player }} - {{ points }} points</p>
+    {% endfor %}
+{% endfor %}
